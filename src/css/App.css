@@ -7,4 +7,13 @@ body {
   text-align: center;
 }
 
+.parent {
+  display: flex;
+  justify-content: space-around;
+}
+
+.children {
+  width: 50%;
+  background-color: white;
+}
 

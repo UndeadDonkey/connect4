@@ -7,7 +7,7 @@ class Question extends Component {
   render() {
     return (
       <div>
-        Add your QuestionText, Reset Button and AnswerButtons here.  
+        Question  
       </div>
     );
   }
