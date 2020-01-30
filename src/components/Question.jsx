@@ -2,15 +2,15 @@ import React, { Component } from 'react';
 // import components
 
 
-class Question extends Component {
+class QuestionT extends Component {
   
   render() {
     return (
       <div>
-        Question  
+        {this.props.q} 
       </div>
     );
   }
 }
 
-export default Question;
+export default QuestionT;
