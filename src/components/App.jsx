@@ -2,17 +2,21 @@ import React, { Component } from 'react';
 import '../css/App.css';
 import Answer from './Answer';
 import QuestionT from './Question';
-// import components
-
+import {buildFirebase, getRandomQuestion} from '../clients/firebase.js';
 class App extends Component {
   constructor(props){
     super(props);
+    let database = buildFirebase();
+    let databaseRef = database.ref("/questions");
+    databaseRef.once("value").then(function(data) {
+      const questions = data.val();
+      console.log(questions);
+      let que = new Question(, 7, "jdbu", "hsdvshvd")
+});
+
     this.state = {
       q: [
-        new Question([333,222,"alex",444], 2, "Yeet", "ygfjgfegfh"),
-        new Question([333,222,"alex",444], 2, "Yee", "ygfjgfegfh"),
-        new Question([333,222,"alex",444], 2, "Ye", "ygfjgfegfh"),
-        new Question([333,222,"alex",444], 2, "Y", "ygfjgfegfh")
+        new Question()
       ],
     }
   }
@@ -26,13 +30,14 @@ class App extends Component {
         <button className="choices"></button>
         <button className="choices"></button>
         <button className="choices"></button>
-        <p>{this.state.q[0].getQ()}</p>
+        
         
       </div>
     );
   }
 }
 
+buildFirebase();
 class Question {
   constructor(choices, correct_index, question_text, user_id){
     this.choices = choices;
@@ -41,7 +46,7 @@ class Question {
     this.user_id = user_id;
   }
   getQ(){
-      return this.question_text
+      return this.question_text;
   }
 }
 export default App;
