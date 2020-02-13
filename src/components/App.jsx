@@ -6,14 +6,6 @@ import {buildFirebase, getRandomQuestion} from '../clients/firebase.js';
 class App extends Component {
   constructor(props){
     super(props);
-    let database = buildFirebase();
-    let databaseRef = database.ref("/questions");
-    databaseRef.once("value").then(function(data) {
-      const questions = data.val();
-      console.log(questions);
-      let que = new Question(, 7, "jdbu", "hsdvshvd")
-});
-
     this.state = {
       q: [
         new Question()
@@ -21,10 +13,11 @@ class App extends Component {
     }
   }
   render() {
+    console.log(this.props.fire[1].choices[1]);
     return (
       <div className="app">
         <Answer />
-        <button className="choices"><QuestionT q={this.state.q[0].question_text} /></button>
+        <button className="choices"><QuestionT q={this.props.fire[1]} /></button>
         <button className="choices"></button>
         <button className="choices"></button>
         <button className="choices"></button>
