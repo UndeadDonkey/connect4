@@ -7,7 +7,7 @@ class Answer extends Component {
   render() {
     return (
       <div>
-          YES
+          {this.props.answerText}
       </div>
     );
   }
