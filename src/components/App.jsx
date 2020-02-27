@@ -10,77 +10,69 @@ class App extends Component {
     this.state = {
       q_index: 0,
       score: 0,
-      ans: [],
+      correctAnsIndex: null,
       button: []
     }
   }
 
   questionSetUp(){
-    let boxes = []
-    let array = [0, 1, 2, 3, 4, 5]
+    this.setState({correctAnsIndex : this.props.fire[this.state.q_index].correct_choice_index});
+    let boxes = [];
+    let array = [0, 1, 2, 3, 4, 5];
     for(var i = 5; i >= 0; i--){
-      let random = Math.floor(Math.random() * (i + 1))
-      let removed = array.pop[random]
+      let random = Math.floor(Math.random() * (i + 1));
+      let removed = array[random];
+      array.splice(random, 1);
       if(removed < 4){
-        boxes.push(<div>
-          <button onClick={()=>this.handleClick()} className="choices 0"><Answer answerText={this.props.fire[this.state.q_index].choices[removed]}/></button>
-        </div>);
+        console.log(this.state.correctAnsIndex);
+        if(removed === this.state.correctAnsIndex){
+          boxes.push(<div>
+            <button className="choices 0" onClick={()=>this.addScore()}><Answer answerText={this.props.fire[this.state.q_index].choices[removed]}/></button>
+          </div>);
+        } else{
+          boxes.push(<div>
+            <button className="choices 0" onClick={()=>this.wrongChoice()}><Answer answerText={this.props.fire[this.state.q_index].choices[removed]}/></button>
+          </div>);
+        }
       } else if(removed === 4){
         boxes.push(<div>
-          <button className="choices a"><QuestionT q={this.props.fire[this.state.q_index]} /></button>
+          <button className="choices a" onClick={()=>this.wrongChoice()}><QuestionT q={this.props.fire[this.state.q_index]} /></button>
         </div>);
       } else{
         boxes.push(<div>
-          <button className="choices b"><Answer /></button>
+          <button className="choices b" onClick={()=>this.wrongChoice()}><Answer answerText={""}/></button>
         </div>);
-      }
     }
-    this.setState({button: boxes})
   }
-
-  correctAnswerClick(){
-
+    this.setState({button : boxes});
   }
-
-  addScoreCl(){
-    console.log(this.className);
+  addScore(){
     this.setState({score: this.state.score + 1});
+    alert("This is the correct answer");
+  }
+
+  wrongChoice(){
+    alert("You clicked the wrong choice");
   }
 
   nextButton(){
     this.setState({q_index: this.state.q_index + 1});
+    this.questionSetUp();
   }
 
-  re(){
-    var result = [];
-    for(var i = 0; i < 4; i++){
-      result.push(<div>
-        <button className="choices 1"><Answer answerText={this.props.fire[this.state.q_index].choices[i]}/></button>
-      </div>);
-    }
-    this.setState({ans: result});
+  componentDidMount(){
+    this.questionSetUp();
   }
   
   render() {
     return (
       <div>
         <div className="app">
-          
           <div className="column1">
-            <div>
-              <button className="choices a"><QuestionT q={this.props.fire[this.state.q_index]} /></button>
-            </div>
-            <div>
-              <button onClick={()=>this.handleClick()} className="choices 0"><Answer answerText={this.props.fire[this.state.q_index].choices[0]}/></button>
-            <div>
-              <button className="choices 2"><Answer answerText={this.props.fire[this.state.q_index].choices[2]}/></button>
-            </div>
-            <div>
-              <button className="choices 3"><Answer answerText={this.props.fire[this.state.q_index].choices[3]}/></button>
-            </div>
-            <div>
-              <button className="choices b"><Answer /></button>
-            </div>
+            {this.state.button.slice(0, 3).map(eachThing =>(eachThing))}
+          </div>
+          <div className="column2">
+            {this.state.button.slice(3).map(eachThing =>(eachThing))}
           </div>
         </div>
         <div className="end">
@@ -88,16 +80,15 @@ class App extends Component {
           <p>Score: {this.state.score}</p>
         </div>
       </div>
-      </div>
     );
   }
 }
 
 buildFirebase();
 class Question {
-  constructor(choices, correct_index, question_text, user_id){
+  constructor(choices, correct_choice_index, question_text, user_id){
     this.choices = choices;
-    this.correct_choices_index = correct_index;
+    this.correct_choice_index = correct_choice_index;
     this.question_text = question_text;
     this.user_id = user_id;
   }
