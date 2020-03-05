@@ -11,12 +11,12 @@ class App extends Component {
       q_index: 0,
       score: 0,
       correctAnsIndex: null,
-      button: []
+      button: [],
+      answered: false
     }
   }
 
   questionSetUp(){
-    this.setState({correctAnsIndex : this.props.fire[this.state.q_index].correct_choice_index});
     let boxes = [];
     let array = [0, 1, 2, 3, 4, 5];
     for(var i = 5; i >= 0; i--){
@@ -24,7 +24,6 @@ class App extends Component {
       let removed = array[random];
       array.splice(random, 1);
       if(removed < 4){
-        console.log(this.state.correctAnsIndex);
         if(removed === this.state.correctAnsIndex){
           boxes.push(<div>
             <button className="choices 0" onClick={()=>this.addScore()}><Answer answerText={this.props.fire[this.state.q_index].choices[removed]}/></button>
@@ -47,8 +46,10 @@ class App extends Component {
     this.setState({button : boxes});
   }
   addScore(){
-    this.setState({score: this.state.score + 1});
-    alert("This is the correct answer");
+    if(!this.state.answered){
+      this.setState({score: this.state.score + 1, answered: true});
+      alert("This is the correct answer");
+    }
   }
 
   wrongChoice(){
@@ -56,12 +57,21 @@ class App extends Component {
   }
 
   nextButton(){
-    this.setState({q_index: this.state.q_index + 1});
-    this.questionSetUp();
+    this.setState({q_index: this.state.q_index + 1, answered: false});
+    this.setState({correctAnsIndex : this.props.fire[this.state.q_index].correct_choice_index});
+    console.log(this.state.q_index);
   }
 
   componentDidMount(){
+    this.setState({correctAnsIndex : this.props.fire[this.state.q_index].correct_choice_index});
     this.questionSetUp();
+  }
+  
+  componentDidUpdate(prevProps, prevState) {
+    if(prevState.correctAnsIndex !== this.state.correctAnsIndex){
+      this.setState({correctAnsIndex : this.props.fire[this.state.q_index].correct_choice_index});
+      this.questionSetUp();
+    }
   }
   
   render() {
